@@ -1,1 +1,139 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
 
+struct node{
+    int w;
+    node * next;
+};
+
+void wypisz(node * lista)
+{
+    while(lista!=NULL){
+        cout<<lista->w<<endl;
+        lista=lista->next;
+    }
+    return;
+}
+
+
+void push_to_back(node *& head,node * target){
+
+    node * p=NULL;
+    node * q=head;
+
+    if(q==NULL){
+        head=target;
+        head->next=NULL;
+        return;
+    }
+
+    while(q!=NULL)
+    {
+        p=q;
+        q=q->next;
+    }
+
+    p->next=target;
+    target->next=NULL;
+    return ;
+}
+
+node * scal(node * left,node* right)
+{
+        node * result=NULL;
+
+        while(right !=NULL || left!=NULL)
+        {
+            if(left==NULL)
+                while(right!=NULL)
+                    {
+                        node * tmp = right->next;
+                        push_to_back(result,right);
+                        right=tmp;
+                    }
+            if(right==NULL)
+                while(left!=NULL)
+                    {
+                        node * tmp = left->next;
+                        push_to_back(result,left);
+                        left=tmp;
+                    }
+
+            if(right!=NULL & left!=NULL)
+            {
+                if(right->w>left->w)
+                {
+                    node * tmp = right->next;
+                    push_to_back(result,right);
+                    right=tmp;
+                }
+                else{
+                    node * tmp = left->next;
+                    push_to_back(result,left);
+                    left=tmp;
+
+                }
+            }
+
+        }
+        return result;
+
+}
+
+node * MergeSort(node * head){
+
+
+        node * a=NULL;
+        node * b=head;
+        node * c=head;
+
+        if(head==NULL)return NULL;
+        if(head->next==NULL)return head;
+
+
+
+        while(c==NULL ? false : c->next!=NULL)
+        {
+            a=b;
+            b=b->next;
+            c=c->next->next;
+        }
+
+        a->next=NULL;
+
+        node * right = MergeSort(b);
+        node * left  =  MergeSort(head);
+
+        node * result=scal(left,right);
+        return result;
+
+
+}
+
+
+int main()
+{
+    srand(time(NULL));
+    node * lista = new node;
+    node * p = lista;
+
+    lista->next=NULL;
+   for(int i=0 ; i<10 ;i++){
+        lista->w=(rand()%40 + 1);
+        lista->next = new node;
+        lista=lista->next;
+    }
+    lista->w = 11;
+    lista->next = NULL;
+    delete(lista);
+    wypisz(p);
+
+    p=MergeSort(p);
+    cout<<"--------------------"<<endl;
+    wypisz(p);
+    cout<<"--------------------"<<endl;
+
+
+}
